@@ -1,0 +1,37 @@
+# compiled output
+/NestjsAPI/dist
+/NestjsAPI/node_modules
+
+# Logs
+/NestjsAPI/logs
+/NestjsAPI*.log
+/NestjsAPI/npm-debug.log*
+/NestjsAPI/pnpm-debug.log*
+/NestjsAPI/yarn-debug.log*
+/NestjsAPI/yarn-error.log*
+/NestjsAPI/lerna-debug.log*
+
+# OS
+/NestjsAPI.DS_Store
+
+# Tests
+/NestjsAPI/coverage
+/NestjsAPI/.nyc_output
+
+# IDEs and editors
+/NestjsAPI/.idea
+/NestjsAPI.project
+/NestjsAPI.classpath
+/NestjsAPI.c9/
+/NestjsAPI*.launch
+/NestjsAPI.settings/
+/NestjsAPI*.sublime-workspace
+
+# IDE - VSCode
+/NestjsAPI.vscode/*
+/NestjsAPI!.vscode/settings.json
+/NestjsAPI!.vscode/tasks.json
+/NestjsAPI!.vscode/launch.json
+/NestjsAPI!.vscode/extensions.json
+
+/NodejsWeb/node_modules

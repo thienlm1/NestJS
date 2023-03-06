@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header" style="display: block;">
+            <a style="font-size: 40px; font-weight: bold; text-decoration: underline;">Get blogs/</a><a href="/users/0"
+                style="font-size: 20px; text-decoration: none;">get users/ </a><a
+                style="font-size: 20px; text-decoration: none;" href="/login"> log out</a>
+        </div>
+        <h3>Create new: <a href="/blogs">New +</a></h3>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                </tr>
+            </thead>
+            <tbody id="tableData">
+            </tbody>
+        </table>
+        <div class="modal" id="deleteForm">
+            <form action="" method="DELETE">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteFormValue">Confirm Action! DELETE blogID: </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure to delete this blog?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="sendDeleteRequest()">Detele</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                onclick="hideDeleteBlog()">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"></script>
+<script>
+    window.onload = function () {
+        fetchBlogs();
+    };
+    function fetchBlogs() {
+        const BearerToken = "Bearer " + document.cookie.split('jwt=')[1]
+        fetch('http://localhost:3100/blogs/0', {
+            method: 'GET', headers: {
+                'Authorization': BearerToken,
+            }
+        }).then(data => {
+            for (var i = 0; i < data.length; i++) {
+                const _id = data[i]._id;
+                const _title = data[i].title;
+                const _description = data[i].description;
+
+
+                var tr = document.createElement("tr");
+                tr.setAttribute("class", "table-active");
+
+                var tdTitle = document.createElement("td");
+                tdTitle.innerText = _title;
+
+                var tdDes = document.createElement("td");
+                tdDes.innerText = _description;
+
+                var tdAction = document.createElement("td");
+                tdAction.setAttribute("class", "table-active");
+
+                var tdActionDeleteBtn = document.createElement("button");
+                tdActionDeleteBtn.innerText = "Delete";
+                setAttributes(tdActionDeleteBtn, { "type": "button", "class": "btn btn-warning", "onclick": "togeDeleteBlog(`" + _id + "`)" })
+
+                var tdActionUpdateBtn = document.createElement("a");
+                tdActionUpdateBtn.innerText = "Update";
+                setAttributes(tdActionUpdateBtn, { "type": "button", "class": "btn btn-success", "style": "margin-left: 5px", "href": "/blogs/" + _id + "" })
+
+                tdAction.appendChild(tdActionDeleteBtn)
+                tdAction.appendChild(tdActionUpdateBtn)
+                tr.appendChild(tdTitle)
+                tr.appendChild(tdDes)
+                tr.appendChild(tdAction)
+
+
+                const table = document.getElementById("tableData")
+                table.appendChild(tr)
+            }
+        });
+    }
+
+    function setAttributes(element, attrs) {
+        for (var key in attrs) {
+            element.setAttribute(key, attrs[key]);
+        }
+    }
+
+    function togeDeleteBlog(id) {
+        document.getElementById("deleteForm").style.display = "block";
+        document.getElementById("deleteFormValue").innerHTML = "Confirm Action! DELETE userID: " + id
+    }
+    function hideDeleteBlog() {
+        document.getElementById("deleteForm").style.display = "none";
+    }
+    function sendDeleteRequest() {
+        const id = document.getElementById("deleteFormValue").innerHTML.split(" ")[4]
+        fetch('http://localhost:3100/blogs/' + id + '', { method: 'DELETE' }).then(res => res.json()).then(data => {
+            location.reload();
+        });
+    }
+</script>
+
+</html>
